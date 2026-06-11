@@ -65,7 +65,7 @@ routing {
 **NB!** Om man har flere `AuthProviderConfig` vil plugin'en teste hver enkelt inntil den finner en gyldig innlogging. Den vil derfor ikke nødvendigvis sikre at bruker er logget inn flere steder.
 
 
-## Nais endepunkter og selftest
+## Kubernetes endepunkter og selftest
 
 **Oppsett:**
 ```kotlin
