@@ -5,7 +5,7 @@
 [versions]
 kotlin = "2.4.0"
 
-junitVersion = "6.1.1"
+junitVersion = "6.1.2"
 
 [libraries]
 kotlinGradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
