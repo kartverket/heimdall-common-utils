@@ -9,4 +9,3 @@ spec:
   type: "library"
   lifecycle: "production"
   owner: "heimdall"
-  system: "m22"
