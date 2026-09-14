@@ -1,0 +1,11 @@
+apiVersion: "backstage.io/v1alpha1"
+kind: "Component"
+metadata:
+  name: "heimdall-common-utils"
+  description: "Felles repo for deling av utils og nyttige pakker heimdall bruker i sine apper"
+  tags:
+    - "public"
+spec:
+  type: "library"
+  lifecycle: "production"
+  owner: "heimdall"
