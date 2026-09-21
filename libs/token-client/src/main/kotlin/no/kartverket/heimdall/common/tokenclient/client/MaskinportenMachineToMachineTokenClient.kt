@@ -30,7 +30,7 @@ class MaskinportenMachineToMachineTokenClient(
             TokenClientUtils.clientAssertionClaimsWithScope(clientId, tokenEndpoint.toString(), scope),
             assertionSigner
         )
-        val request = TokenRequest.Builder(tokenEndpoint, signedJWT, JWTBearerGrant(signedJWT.clientAssertion))
+        val request = TokenRequest.Builder(tokenEndpoint, JWTBearerGrant(signedJWT.clientAssertion))
             .scope(Scope(scope))
             .build()
 
