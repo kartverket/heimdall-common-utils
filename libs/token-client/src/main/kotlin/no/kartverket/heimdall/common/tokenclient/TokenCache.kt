@@ -31,18 +31,14 @@ class CaffeineTokenCache(
     }
 
     override fun getFromCacheOrTryProvider(cacheKey: String, tokenProvider: () -> SignedJWT): SignedJWT {
-        val token = cache.getIfPresent(cacheKey)
-
-        return when {
-            token == null -> updatedToken(cacheKey, tokenProvider)
-            shouldRefreshToken(token, earlyRefreshThreshold) -> updatedToken(cacheKey, tokenProvider)
-            else -> token
-        }
-    }
-
-    private fun updatedToken(cacheKey: String, tokenProvider: () -> SignedJWT): SignedJWT {
-        val newToken = tokenProvider()
-        cache.put(cacheKey, newToken)
-        return newToken
+        // Use ConcurrentMap#compute for an atomic check-and-refresh so concurrent callers
+        // for the same cacheKey don't each trigger their own token request (cache stampede).
+        return requireNotNull(
+            cache.asMap().compute(cacheKey) { _, existing ->
+                if (existing == null) tokenProvider()
+                else if (shouldRefreshToken(existing, earlyRefreshThreshold)) tokenProvider()
+                else existing
+            }
+        )
     }
 }
