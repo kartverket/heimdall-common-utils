@@ -18,10 +18,10 @@ object TokenClientFactory {
         )
 
         @JvmStatic
-        fun azuread(): MachineToMachineTokenClient = azuread(CaffeineTokenCache())
+        fun azureAd(): MachineToMachineTokenClient = azureAd(CaffeineTokenCache())
 
         @JvmStatic
-        fun azuread(tokenCache: TokenCache): MachineToMachineTokenClient =
+        fun azureAd(tokenCache: TokenCache): MachineToMachineTokenClient =
             AzureAdMachineToMachineTokenClient(
                 clientId = getEnv(AzureEnv.CLIENT_ID),
                 tokenEndpoint = getEnv(AzureEnv.OPENID_CONFIG_TOKEN_ENDPOINT),
