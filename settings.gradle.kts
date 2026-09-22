@@ -28,5 +28,6 @@ plugins {
 include(":libs:ktor-utils")
 include(":libs:token-client")
 include(":libs:kotlin-utils")
+include(":libs:feature-flags")
 
 rootProject.name = "heimdall-common-utils"
