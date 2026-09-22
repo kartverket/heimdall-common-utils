@@ -35,7 +35,7 @@ class AzureAdMachineToMachineTokenClientTest {
             tokenCache = CaffeineTokenCache()
         )
 
-        val token = tokenClient.createMachineToMachineToken("test-scope")
+        val token = tokenClient.createToken("test-scope")
         val recordedRequest = server.takeRequest()
 
         val body = parseFormdata(recordedRequest.body.readUtf8())
@@ -62,12 +62,12 @@ class AzureAdMachineToMachineTokenClientTest {
             tokenCache = CaffeineTokenCache()
         )
 
-        tokenClient.createMachineToMachineToken("scope-1")
-        tokenClient.createMachineToMachineToken("scope-1")
+        tokenClient.createToken("scope-1")
+        tokenClient.createToken("scope-1")
 
         assertThat(server.requestCount).isEqualTo(1)
 
-        tokenClient.createMachineToMachineToken("scope-2")
+        tokenClient.createToken("scope-2")
         assertThat(server.requestCount).isEqualTo(2)
     }
 }

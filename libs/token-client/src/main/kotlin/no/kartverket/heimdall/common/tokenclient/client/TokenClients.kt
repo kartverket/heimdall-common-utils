@@ -27,10 +27,10 @@ class DownstreamApi(
 }
 
 fun interface MachineToMachineTokenClient {
-    fun createMachineToMachineToken(scope: String): SignedJWT
-    fun createMachineToMachineToken(scope: DownstreamApi): SignedJWT = createMachineToMachineToken(scope.tokenscope())
+    fun createToken(scope: String): SignedJWT
+    fun createToken(scope: DownstreamApi): SignedJWT = createToken(scope.tokenscope())
     fun bindTo(scope: String): BoundMachineToMachineTokenClient = object : BoundMachineToMachineTokenClient {
-        override fun createToken(): SignedJWT = createMachineToMachineToken(scope)
+        override fun createToken(): SignedJWT = createToken(scope)
     }
     fun bindTo(scope: DownstreamApi): BoundMachineToMachineTokenClient = bindTo(scope.tokenscope())
 }
@@ -40,10 +40,10 @@ fun interface BoundMachineToMachineTokenClient {
 }
 
 fun interface OnBehalfOfTokenClient {
-    fun exchangeOnBehalfOfToken(scope: String, accessToken: SignedJWT): SignedJWT
-    fun exchangeOnBehalfOfToken(scope: DownstreamApi, accessToken: SignedJWT): SignedJWT = exchangeOnBehalfOfToken(scope.tokenscope(), accessToken)
+    fun exchangeToken(scope: String, accessToken: SignedJWT): SignedJWT
+    fun exchangeToken(scope: DownstreamApi, accessToken: SignedJWT): SignedJWT = exchangeToken(scope.tokenscope(), accessToken)
     fun bindTo(scope: String): BoundOnBehalfOfTokenClient = object : BoundOnBehalfOfTokenClient {
-        override fun exchangeToken(accessToken: SignedJWT): SignedJWT = exchangeOnBehalfOfToken(scope, accessToken)
+        override fun exchangeToken(accessToken: SignedJWT): SignedJWT = exchangeToken(scope, accessToken)
     }
     fun bindTo(scope: DownstreamApi): BoundOnBehalfOfTokenClient = bindTo(scope.tokenscope())
 }
