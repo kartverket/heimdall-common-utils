@@ -30,7 +30,10 @@ class FeatureToggleTest {
 
     private lateinit var server: MockWebServer
     private val serializer = PostHogSerializer(mockk())
-    private val TEST_FLAGG = "test_flagg"
+    private val TEST_FLAGG = object : FeatureToggle.Flag {
+        override val value: String = "test_flagg"
+
+    }
 
     @BeforeEach
     fun setUp() {
@@ -54,7 +57,7 @@ class FeatureToggleTest {
                 flags = listOf(
                     flagDefinition(
                         id = 1,
-                        name = TEST_FLAGG,
+                        name = TEST_FLAGG.value,
                         releaseCondition = emptyList()
                     )
                 )
@@ -82,7 +85,7 @@ class FeatureToggleTest {
                 flags = listOf(
                     flagDefinition(
                         id = 1,
-                        name = TEST_FLAGG,
+                        name = TEST_FLAGG.value,
                         releaseCondition = emptyList()
                     )
                 )
@@ -104,7 +107,7 @@ class FeatureToggleTest {
                 flags = listOf(
                     flagDefinition(
                         id = 1,
-                        name = TEST_FLAGG,
+                        name = TEST_FLAGG.value,
                         releaseCondition = emptyList(),
                         active = false
                     )
@@ -137,7 +140,7 @@ class FeatureToggleTest {
                 listOf(
                     flagDefinition(
                         id = 1,
-                        name = TEST_FLAGG,
+                        name = TEST_FLAGG.value,
                         releaseCondition = listOf(
                             releaseCondition(
                                 property(FeatureToggle.CtxKeys.ENVIRONMENT, "betatest", PropertyOperator.EXACT),
@@ -164,7 +167,7 @@ class FeatureToggleTest {
         )
         server.enqueue(
             remoteResponse(
-                TEST_FLAGG to true
+                TEST_FLAGG.value to true
             )
         )
 
@@ -183,12 +186,12 @@ class FeatureToggleTest {
 
         server.enqueue(
             remoteResponse(
-                TEST_FLAGG to true
+                TEST_FLAGG.value to true
             )
         )
         server.enqueue(
             remoteResponse(
-                TEST_FLAGG to false
+                TEST_FLAGG.value to false
             )
         )
 
