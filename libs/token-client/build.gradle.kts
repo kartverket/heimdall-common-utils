@@ -4,10 +4,10 @@ plugins {
 
 dependencies {
     implementation(libs.slf4j)
-    implementation(libs.okhttp)
     implementation(libs.caffeine)
-    implementation(libs.oauthSdk)
     implementation(project(":libs:kotlin-utils"))
+    api(libs.okhttp)
+    api(libs.oauthSdk)
 
     testImplementation(libs.mockwebserver)
     testImplementation(libs.assertk)

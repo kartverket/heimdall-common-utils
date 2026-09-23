@@ -19,12 +19,12 @@ class AzureAdMachineToMachineTokenClient(
         private val log = LoggerFactory.getLogger("AzureAdMachineToMachineTokenClient")
     }
 
-    override fun createMachineToMachineToken(scope: String): SignedJWT {
+    override fun createToken(scope: String): SignedJWT {
         val cacheKey = scope
-        return tokenCache.getFromCacheOrTryProvider(cacheKey) { createToken(scope) }
+        return tokenCache.getFromCacheOrTryProvider(cacheKey) { fetchToken(scope) }
     }
 
-    private fun createToken(scope: String): SignedJWT {
+    private fun fetchToken(scope: String): SignedJWT {
         val signedJWT = TokenClientUtils.signedClientAssertion(
             TokenClientUtils.clientAssertionHeader(privateJwkKeyId),
             TokenClientUtils.clientAssertionClaims(clientId, tokenEndpoint.toString()),

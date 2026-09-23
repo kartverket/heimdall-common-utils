@@ -41,7 +41,7 @@ class AzureAdOnBehalfOfTokenClientTest {
         )
 
         val userAccesstoken = TokenCreator.createToken("subject")
-        val token = tokenClient.exchangeOnBehalfOfToken("test-scope", userAccesstoken)
+        val token = tokenClient.exchangeToken("test-scope", userAccesstoken)
         val recordedRequest = server.takeRequest()
 
         val body = parseFormdata(recordedRequest.body.readUtf8())
@@ -73,14 +73,14 @@ class AzureAdOnBehalfOfTokenClientTest {
         val user1Token2 = TokenCreator.createToken("subject1")
         val user2Token1 = TokenCreator.createToken("subject2")
 
-        tokenClient.exchangeOnBehalfOfToken("test-scope-1", user1Token1)
-        tokenClient.exchangeOnBehalfOfToken("test-scope-1", user1Token1)
-        tokenClient.exchangeOnBehalfOfToken("test-scope-1", user1Token2)
+        tokenClient.exchangeToken("test-scope-1", user1Token1)
+        tokenClient.exchangeToken("test-scope-1", user1Token1)
+        tokenClient.exchangeToken("test-scope-1", user1Token2)
 
         assertThat(server.requestCount).isEqualTo(1)
 
-        tokenClient.exchangeOnBehalfOfToken("test-scope-1", user2Token1)
-        tokenClient.exchangeOnBehalfOfToken("test-scope-2", user2Token1)
+        tokenClient.exchangeToken("test-scope-1", user2Token1)
+        tokenClient.exchangeToken("test-scope-2", user2Token1)
 
         assertThat(server.requestCount).isEqualTo(3)
     }
@@ -96,7 +96,7 @@ class AzureAdOnBehalfOfTokenClientTest {
 
         assertFailure {
             @Suppress("CAST_NEVER_SUCCEEDS")
-            tokenClient.exchangeOnBehalfOfToken("scope", TokenCreator.createToken(null))
+            tokenClient.exchangeToken("scope", TokenCreator.createToken(null))
         }.hasMessage("Unable to get subject from access token")
     }
 
@@ -111,7 +111,7 @@ class AzureAdOnBehalfOfTokenClientTest {
 
         assertFailure {
             @Suppress("CAST_NEVER_SUCCEEDS")
-            tokenClient.exchangeOnBehalfOfToken("scope", SignedJWT.parse("Not a valid accesstoken"))
+            tokenClient.exchangeToken("scope", SignedJWT.parse("Not a valid accesstoken"))
         }.isInstanceOf<ParseException>()
     }
 }
