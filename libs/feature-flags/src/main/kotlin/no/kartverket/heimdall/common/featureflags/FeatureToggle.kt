@@ -26,9 +26,13 @@ object FeatureToggle {
         fun get(): Map<CtxKeys, Any?>
     }
 
+    interface Flag {
+        val value: String
+    }
+
     interface Service {
-        fun isActive(flag: String): Boolean
-        fun isActive(flag: String, contextProvider: Map<CtxKeys, Any?> = emptyMap()): Boolean
+        fun isActive(flag: Flag): Boolean
+        fun isActive(flag: Flag, contextProvider: Map<CtxKeys, Any?> = emptyMap()): Boolean
         fun close()
     }
 
@@ -46,9 +50,9 @@ object FeatureToggle {
         )
         private val logger: Logger = LoggerFactory.getLogger("FeatureToggleService")
         private val closed = AtomicBoolean(false)
-        override fun isActive(flag: String): Boolean = isActive(flag, emptyMap())
+        override fun isActive(flag: Flag): Boolean = isActive(flag, emptyMap())
 
-        override fun isActive(flag: String, contextProvider: Map<CtxKeys, Any?>): Boolean {
+        override fun isActive(flag: Flag, contextProvider: Map<CtxKeys, Any?>): Boolean {
             return runBlocking {
                 runCatching {
                     withTimeout(5.seconds) {
@@ -56,13 +60,13 @@ object FeatureToggle {
                         val distinctId = ctx[CtxKeys.USERNAME]?.toString() ?: "anonymous"
 
                         val optionsBuilder = PostHogEvaluateFlagsOptions.builder()
-                            .flagKeys(listOf(flag))
+                            .flagKeys(listOf(flag.value))
                         ctx.forEach { (key, value) ->
                             optionsBuilder.personProperty(key.value, value)
                         }
 
                         val flags = posthog.evaluateFlags(distinctId, optionsBuilder.build())
-                        flags.isEnabled(flag)
+                        flags.isEnabled(flag.value)
                     }
                 }.getOrElse { exception ->
                     logger.error("Feil ved evaluering av feature toggle", exception)
@@ -78,10 +82,17 @@ object FeatureToggle {
         }
     }
 
-    class MockImpl : Service {
-        private val mocks = mutableMapOf<String, Boolean>()
+    enum class TestFlags(override val value: String) : Flag {
+        MY_FLAG("asd")
+    }
+    init {
+        MockImpl().isActive(TestFlags.MY_FLAG)
+    }
 
-        fun setFlagStatus(flag: String, enabled: Boolean?) {
+    class MockImpl : Service {
+        private val mocks = mutableMapOf<Flag, Boolean>()
+
+        fun setFlagStatus(flag: Flag, enabled: Boolean?) {
             if (enabled == null) {
                 mocks.remove(flag)
             } else {
@@ -89,7 +100,7 @@ object FeatureToggle {
             }
         }
 
-        fun <T> withFlagStatus(flags: String, enabled: Boolean, fn: () -> T): T {
+        fun <T> withFlagStatus(flags: Flag, enabled: Boolean, fn: () -> T): T {
             val current = mocks[flags]
             setFlagStatus(flags, enabled)
             val result = fn()
@@ -97,12 +108,12 @@ object FeatureToggle {
             return result
         }
 
-        override fun isActive(flag: String): Boolean {
+        override fun isActive(flag: Flag): Boolean {
             return mocks[flag] ?: false
         }
 
         override fun isActive(
-            flag: String,
+            flag: Flag,
             contextProvider: Map<CtxKeys, Any?>
         ): Boolean {
             return mocks[flag] ?: false
