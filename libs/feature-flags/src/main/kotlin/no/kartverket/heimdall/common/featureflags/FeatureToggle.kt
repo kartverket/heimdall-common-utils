@@ -82,13 +82,6 @@ object FeatureToggle {
         }
     }
 
-    enum class TestFlags(override val value: String) : Flag {
-        MY_FLAG("asd")
-    }
-    init {
-        MockImpl().isActive(TestFlags.MY_FLAG)
-    }
-
     class MockImpl : Service {
         private val mocks = mutableMapOf<Flag, Boolean>()
 
