@@ -264,7 +264,6 @@ class FeatureToggleTest {
                     )
                     key to value
                 },
-                quotaLimited = null,
                 requestId = null,
                 evaluatedAt = null,
             )
