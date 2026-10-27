@@ -18,7 +18,7 @@ oauthSdk = { module = "com.nimbusds:oauth2-oidc-sdk", version = "11.38.2" }
 kotlinxDatetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.8.0" }
 kotlinxSerialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.11.0" }
 kotlinxCoroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.11.0" }
-micrometerPrometheus = { module = "io.micrometer:micrometer-registry-prometheus", version = "1.17.1" }
+micrometerPrometheus = { module = "io.micrometer:micrometer-registry-prometheus", version = "1.17.2" }
 
 junitApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitVersion" }
 junitEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitVersion" }
